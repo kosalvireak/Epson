@@ -1,0 +1,15 @@
+1. Let's user select column
+2. Make the algorithm detail
+-----------------------------------------
+Meeting: 23/02/2023
+We started to create project
+Download Packages
+  Tailwind CSS            https://tailwindcss.com/
+  Vue-sidebar-menu-akahon https://github.com/akahon/vue-sidebar-menu-akahon
+  Chart JS (alternative)
+      https://vue-chartjs.org/examples/
+      https://apexcharts.com/vue-chart-demos/bar-charts/basic/
+Choose Project font
+Project Color
+Initial idea components
+-----------------------------------------

@@ -1,0 +1,12 @@
+1. All the Logged-in users can perform all the operation in the application namely 
+    1.1 Upload the supported file with the extension (.csv) .
+    1.2 Read the data in the table and graph form.
+    1.3 Update the data buy performing Sort both ascending and descending, delete one row of data buy clicking of (Delete) Button
+    1.4 Delete the data
+2. User can only see their own files
+3. Only the Owner (csv owner) can delete their file
+
+TODO: 
+1. User be able to edit the data one by one in table form
+2. User could change their profile.
+
