@@ -10,7 +10,7 @@ const toaster = createToaster({
     max: 2
 });
 
-const BACKEND_URL = import.meta.env.VITE_VUE_APP_BACKEND_URL;
+const BACKEND_URL = 'http://localhost:3000'
 
 const state = {
     //User
