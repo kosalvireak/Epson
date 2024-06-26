@@ -1,3 +1,18 @@
+![Login](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_1.png)
+![Register](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_2.png)
+![Forgot-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_3.png)
+![Reset-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_4.png)
+![Reset-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_5.png)
+![Reset-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_6.png)
+![Edit-Profile](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_7.png)
+![Profile](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_8.png)
+![Dashboard](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_9.png)
+![Data-board](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_10.png)
+![Upload CSV](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_11.png)
+![Upload Table](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_12.png)
+![Detail](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_13.png)
+![Detail-2](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/main/images/Screenshot_14.png)
+
 # **Documentation**
 
 1. [End-User Documentation](#1-end-user-documentation)
@@ -365,18 +380,3 @@ Example:
 
 `ProfileCsvHeader.vue` : A folder preview of csv contain title and csv name use in Profile page.
 
-
-![Login](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_1.png)
-![Register](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_2.png)
-![Forgot-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_3.png)
-![Reset-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_4.png)
-![Reset-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_5.png)
-![Reset-Password](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_6.png)
-![Edit-Profile](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_7.png)
-![Profile](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_8.png)
-![Dashboard](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_9.png)
-![Databoard](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_10.png)
-![Upload CSV](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_11.png)
-![Upload Table](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_12.png)
-![Detail](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_13.png)
-![Detail-2](https://raw.githubusercontent.com/kosalvireak/Plot-Graph/images/Screenshot_14.png)
