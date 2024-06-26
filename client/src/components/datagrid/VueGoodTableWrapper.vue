@@ -103,8 +103,8 @@ export default {
 
 <style scope>
 .vue-good-table-wrapper {
-  margin: 20px;
-  padding: 20px;
+  margin: 10px;
+  padding: 10px;
   border-radius: 5px;
 }
 

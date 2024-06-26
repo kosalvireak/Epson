@@ -25,6 +25,15 @@ const state = {
     onecsv: {},
     newcsv: {},
     csvTitle: "",
+    displayedCharts: {
+        showBarChart: true,
+        showLineChart: false,
+        showPieChart: true,
+        showDoughnutChart: false
+    },
+    allCsvsEmpty: false,
+    isSendingRequest: false,
+    dataInsight: {}
 
 };
 const getters = {
@@ -39,12 +48,17 @@ const getters = {
     CsvTitle: state => state.csvTitle,
     NewCsv: state => state.newcsv,
     VueGoodTableData: state => state.vuegoodtabledata,
+    AllCsvsEmpty: state => state.allCsvsEmpty,
+    DisplayedCharts: state => state.displayedCharts,
+    IsSendingRequest: state => state.isSendingRequest,
+    DataInsights: state => state.dataInsight,
+
 };
 const actions = {
     //User
     async registerUser({ dispatch, commit }, user) {
         try {
-            const response = await axios.post(
+            const res = await axios.post(
                 `${BACKEND_URL}/api/user/register`,
                 user,
                 {
@@ -53,21 +67,27 @@ const actions = {
                     }
                 }
             );
-            localStorage.setItem("token", response.data.token);
-            commit("userAdded", response.data.token);
-            await dispatch("loadUser");
-        } catch (err) {
-            if (err.response.data.msg) {
-                commit("Alert", err.response.data.msg);
+            if (res.data.status == true) {
+                localStorage.setItem("token", res.data.token);
+                commit("userAdded", res.data.token);
+                await dispatch("loadUser");
             } else {
-                commit("Alert", err.response.data.errors[0].msg);
+                commit("Alert", `${res.data.msg}`);
+            }
+            commit("setIsSendingRequest", false);
+        } catch (err) {
+            if (err) {
+                commit("Alert", err.message);
+                toaster.warning(err.message);
+            } else {
+                toaster.warning("Server Error");
             }
         }
     },
 
     async LoginUser({ dispatch, commit }, user) {
         try {
-            const response = await axios.post(
+            const res = await axios.post(
                 `${BACKEND_URL}/api/user/login`,
                 user,
                 {
@@ -76,29 +96,98 @@ const actions = {
                     }
                 }
             );
-            localStorage.setItem("token", response.data.token);
-            commit("loggedIN", response.data.token);
-            await dispatch("loadUser");
-        } catch (err) {
-            if (err.response.data.msg) {
-                commit("Alert", err.response.data.msg);
+            if (res.data.status == true) {
+                localStorage.setItem("token", res.data.token);
+                commit("loggedIN", res.data.token);
+                await dispatch("loadUser");
             } else {
-                commit("Alert", err.response.data.errors[0].msg);
+                commit("Alert", `${res.data.msg}`);
+            }
+            commit("setIsSendingRequest", false);
+        } catch (err) {
+            if (err.res.data.msg) {
+                commit("Alert", err.res.data.msg);
+            } else {
+                commit("Alert", "Login Error");
+                toaster.warning("Login Error");
             }
         }
     },
 
-    async loadUser({ commit }) {
+    async loadUser({ commit }, isChangeProfile) {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
         }
         try {
             const res = await axios.get(`${BACKEND_URL}/api/user/get`);
             commit("setUser", res.data);
+            if (isChangeProfile) {
+                return;
+            }
             router.push({ path: "/admin/dashboard" }).catch(() => { });
         } catch (err) {
             router.go(-1);
             commit("Alert", err.response.data.msg);
+        }
+    },
+    async resetPassword({ commit }, user) {
+        try {
+            const res = await axios.post(
+                `${BACKEND_URL}/api/user/resetPassword`,
+                user,
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+            if (res.data.status == true) {
+                toaster.success(`${res.data.msg}`);
+            } else {
+                commit("Alert", `${res.data.msg}`);
+            }
+            commit("setIsSendingRequest", false);
+            console.log(res);
+        } catch (err) {
+            commit("Alert", "Server Error");
+        }
+    },
+    async updateUser({ commit, dispatch }, user) {
+        let User = new FormData();
+        User.append('name', user.name);
+        User.append('email', user.email)
+        User.append('oldpassword', user.oldpassword);
+        User.append('newpassword', user.newpassword);
+        var imageFile = user.image;
+        if (imageFile) {
+            User.append('image', imageFile);
+        }
+        const id = state.user._id
+        try {
+            const res = await axios.put(`${BACKEND_URL}/api/user/update/` + id,
+                User,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+
+            if (res.data.status == true) {
+                await dispatch("loadUser", true);
+                toaster.success(res.data.msg);
+            } else {
+                toaster.warning(res.data.msg);
+
+            }
+            commit("setIsSendingRequest", false);
+        }
+        catch (err) {
+            if (err.response.data.msg) {
+                commit("Alert", err.response.data.msg);
+            } else {
+                commit("Alert", "Login Error");
+                toaster.warning("Login Error");
+            }
         }
     },
 
@@ -156,12 +245,17 @@ const actions = {
             const data = await response.data;
             commit("addAllCsvs", data);
         } catch (err) {
-            commit("Alert", err.response.data.msg);
-            toaster.warning("Oops! Something went wrong. Can't get the CSV files");
+            if (err.response && err.response.status === 404) {
+                commit("setAllCsvsEmpty");
+                toaster.warning(err.response.data.msg);
+            } else {
+                commit("Alert", "Oops! Something went wrong. Can't get the CSV files");
+                toaster.warning("Oops! Something went wrong. Can't get the CSV files");
+            }
         }
     },
 
-    async getSpecificCsvById({ commit }, id) {
+    async getSpecificCsvById({ dispatch, commit }, id) {
         try {
             const response = await fetch(`${BACKEND_URL}/api/csv/get/` + id);
             if (!response.ok) {
@@ -171,6 +265,7 @@ const actions = {
             else {
                 const data = await response.json();
                 commit("addOneCsv", data);
+                dispatch("getDataInsight");
             }
         } catch (error) {
             console.log(error.message);
@@ -196,22 +291,27 @@ const actions = {
             };
         }
     },
+
     async editCsv({ dispatch, commit }, id) {
         try {
-            const requestOptions = {
-                method: "PUT",
+            const res = await axios.put(`${BACKEND_URL}/api/csv/update/${id}`, {
+                data: state.onecsv
+            }, {
                 headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    data: state.onecsv
-                })
-            }
-            fetch(`${BACKEND_URL}/api/csv/update/` + id, requestOptions)
-                .then(res => res.body)
+                    'Content-Type': 'application/json'
+                }
+            });
 
+
+            if (res.data.status == true) {
+                commit("addOneCsv", res.data.csv);
+                toaster.success('Change has been made.');
+            }
+            else {
+                toaster.warning(res.data.msg);
+            }
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             throw error;
         }
     },
@@ -221,9 +321,36 @@ const actions = {
         const newOneCsv = { ...temp, title };
         commit("addOneCsv", newOneCsv)
         await dispatch("editCsv", temp._id)
-        await dispatch("getSpecificCsvById", temp._id)
         toaster.success(`Title changed to '${title}'`);
         console.log("changeTitle", title);
+    },
+    async onChangeDisplayedBarChart({ dispatch, commit }) {
+        const temp = state.onecsv;
+        state.onecsv.displayedCharts.showBarChart = !state.onecsv.displayedCharts.showBarChart;
+        const newOneCsv = { ...temp };
+        commit("addOneCsv", newOneCsv)
+        await dispatch("editCsv", temp._id)
+    },
+    async onChangeDisplayedLineChart({ dispatch, commit }) {
+        const temp = state.onecsv;
+        state.onecsv.displayedCharts.showLineChart = !state.onecsv.displayedCharts.showLineChart;
+        const newOneCsv = { ...temp };
+        commit("addOneCsv", newOneCsv)
+        await dispatch("editCsv", temp._id)
+    },
+    async onChangeDisplayedPieChart({ dispatch, commit }) {
+        const temp = state.onecsv;
+        state.onecsv.displayedCharts.showPieChart = !state.onecsv.displayedCharts.showPieChart;
+        const newOneCsv = { ...temp };
+        commit("addOneCsv", newOneCsv)
+        await dispatch("editCsv", temp._id)
+    },
+    async onChangeDisplayedDoughnutChart({ dispatch, commit }) {
+        const temp = state.onecsv;
+        state.onecsv.displayedCharts.showDoughnutChart = !state.onecsv.displayedCharts.showDoughnutChart;
+        const newOneCsv = { ...temp };
+        commit("addOneCsv", newOneCsv)
+        await dispatch("editCsv", temp._id)
     },
     async sortAscending({ dispatch, commit }) {
         const temp = state.onecsv;
@@ -237,8 +364,6 @@ const actions = {
         const newOneCsv = { ...temp, names, numbers };
         commit("addOneCsv", newOneCsv)
         await dispatch("editCsv", temp._id)
-        await dispatch("getSpecificCsvById", temp._id)
-        console.log("state.user", state.user._id);
     },
     async sortDescending({ dispatch, commit }) {
         const temp = state.onecsv;
@@ -250,10 +375,9 @@ const actions = {
         const names = data.map(({ name }) => name);
         const numbers = data.map(({ number }) => number);
         const newOneCsv = { ...temp, names, numbers };
+
         commit("addOneCsv", newOneCsv)
         await dispatch("editCsv", temp._id)
-        await dispatch("getSpecificCsvById", temp._id)
-        console.log("sortDescending", temp.title);
     },
     async deleteRow({ dispatch, commit }, rowIndex) {
         const temp = state.onecsv;
@@ -267,12 +391,49 @@ const actions = {
         await dispatch("editCsv", temp._id)
         console.log("deleteRow", rowIndex);
     },
+    async createCsvTable({ dispatch, commit }, array) {
+        const names = [];
+        const numbers = [];
+        const title = "Untitled document";
+        var isNumberNotInt = false;
+
+        for (var i = 0; i < array.length; i++) {
+            var num = parseInt(array[i].number);
+
+            if (array[i].name == "") {
+                commit("Alert", "Your column 'Name' can't be blank.");
+                toaster.warning("Your column 'Name' can't be blank.");
+                isNumberNotInt = true;
+                return false;
+            }
+
+            if (Number.isInteger(num)) {
+                numbers.push(num);
+                names.push(array[i].name.toString());
+            }
+            else {
+                commit("Alert", "Your column 'Number' must be all number and can't be blank.");
+                toaster.warning("Your column 'Number' must be all number and can't be blank.");
+                isNumberNotInt = true;
+                return false;
+            }
+        }
+        if (!isNumberNotInt) {
+            const newCsv = {
+                title,
+                names,
+                numbers,
+            };
+            await commit("addNewCsv", newCsv);
+            await dispatch("handleSubmit");
+            return true;
+        }
+    },
     async saveTableData({ dispatch, commit }, array) {
         const temp = state.onecsv;
         const names = [];
         const numbers = [];
         var isNumberNotInt = false;
-
         for (var i = 0; i < array.length; i++) {
             var num = parseInt(array[i].number);
             if (Number.isInteger(num)) {
@@ -283,15 +444,51 @@ const actions = {
                 commit("Alert", "Your column 'Number' must be all number.");
                 toaster.warning("Your column 'Number' must be all number.");
                 isNumberNotInt = true
-                break;
             }
         }
+
         if (!isNumberNotInt) {
             const newOneCsv = { ...temp, names, numbers };
             commit("addOneCsv", newOneCsv)
             await dispatch("editCsv", temp._id)
-            console.log("Save add new Row");
+            console.log("saveTableData");
         }
+        else {
+            console.log("Your column 'Number' must be all number.");
+        }
+    },
+    async findMedian({ commit, dispatch }) {
+        const { numbers } = state.onecsv;
+        const a = [...numbers];
+        const n = a.length;
+
+        // Sort the array numerically
+        a.sort((x, y) => x - y);
+
+        if (n % 2 !== 0) {
+            return a[Math.floor(n / 2)];
+        }
+
+        return (a[n / 2 - 1] + a[n / 2]) / 2;
+    },
+    async getDataInsight({ commit, dispatch }) {
+        commit("ClearDataInsight");
+
+        const numbers = state.onecsv.numbers;
+
+        const length = numbers.length;
+        const minimum = Math.min(...numbers);
+        const maximum = Math.max(...numbers);
+
+        const sum = numbers.reduce((partialSum, a) => partialSum + a, 0);
+        const average = Math.round(sum / length);
+
+        const median = await dispatch("findMedian");
+        // const median = 5;
+        const tempDataInsight = { sum, average, minimum, median, maximum };
+        commit("SetDataInsight", tempDataInsight);
+
+
     },
 };
 
@@ -312,10 +509,7 @@ const mutations = {
         (state.Auth = false), (state.user = {}), (state.token = null);
     },
     Alert: (state, error) => {
-        localStorage.removeItem("token");
         state.error = error;
-        state.Auth = false;
-        state.user = {};
         setTimeout(
             function () {
                 state.error = null;
@@ -327,7 +521,6 @@ const mutations = {
     addAllCsvs: (state, allcsvs) => {
         state.allcsvs = allcsvs;
     },
-
     //Csv
     addOneCsv: (state, onecsv) => {
         state.onecsv = onecsv;
@@ -338,9 +531,24 @@ const mutations = {
     addCsvTitle: (state, csvtitle) => {
         state.csvTitle = csvtitle;
     },
+    addDisplayedCharts: (state, displayedCharts) => {
+        state.displayedCharts = displayedCharts;
+    },
     clearNewCsvState: (state) => {
         state.newcsv = {};
         state.csvTitle = "";
+    },
+    setAllCsvsEmpty: (state) => {
+        state.allCsvsEmpty = true;
+    },
+    setIsSendingRequest: (state, bool) => {
+        state.isSendingRequest = bool;
+    },
+    ClearDataInsight: (state) => {
+        state.dataInsight = {};
+    },
+    SetDataInsight: (state, data) => {
+        state.dataInsight = data;
     }
 };
 

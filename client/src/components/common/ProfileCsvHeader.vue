@@ -15,7 +15,11 @@
       </div>
     </router-link>
     <button class="w-1/6" @click="Delete()">
-      <span class="material-symbols-outlined button"> delete </span>
+      <span
+        class="material-symbols-outlined bi-red-transition-button p-2 rounded-2xl"
+      >
+        delete
+      </span>
     </button>
   </div>
 </template>
@@ -71,18 +75,6 @@ export default {
   justify-content: space-between;
   color: white;
   border-radius: 15px;
-}
-.title {
-  text-overflow: ellipsis;
-}
-.button {
-  padding: 5px;
-  border-radius: 15px;
-}
-.ellipsis {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 </style>
   

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <Navbar></Navbar>
     <div v-if="User">
       <h1 class="p-2">Welcome {{ User.name }} !!!</h1>
     </div>
@@ -9,11 +9,11 @@
 
 <script>
 import { store, router } from "@/main";
-import Header from "./Header.vue";
+import Navbar from "./Navbar.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Home",
-  components: { Header },
+  components: { Navbar },
   data() {
     return {};
   },

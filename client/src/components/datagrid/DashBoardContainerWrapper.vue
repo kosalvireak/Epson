@@ -1,23 +1,20 @@
 <template>
-  <div class="Dashboard_Container_Wrapper">
+  <div class="Dashboard_Container_Wrapper rounded-2xl">
     <div class="popup_header w-auto overflow-hidden">
-      <h2 class="w-4/5 ellipsis">{{ title }}</h2>
-      <button class="popup-close w-1/5 button" @click="Delete()">
-        Delete Csv
+      <h2 class="w-5/6 ellipsis">{{ title }}</h2>
+      <button
+        class="popup-close w-1/6 bi-red-transition-button"
+        @click="Delete()"
+      >
+        Delete
       </button>
     </div>
     <div class="popup-body">
-      <div class="popup-body-content ellipsisContainer">
+      <div class="popup-body-content ellipsis-container rounded-2xl">
         <router-link :to="`/admin/dashboard/${id}`">
-          <!-- <h3 class="ellipsis"><b>Filename:</b> {{ fileName }}</h3>
-          <h3 class="ellipsis"><b>Upload Date: </b>{{ getDate() }}</h3>
-          <h3 class="ellipsis"><b>Column Name:</b> {{ names }}</h3>
-          <h3 class="ellipsis"><b>Column Number:</b> {{ numbers }}</h3>
-          <h3 class="ellipsis"><b>Author:</b> {{ author }}</h3> -->
           <h3><b>Upload Date: </b>{{ getDate() }}</h3>
           <h3><b>Column Name:</b> {{ names }}</h3>
           <h3 style="overflow: visible"><b>Column Number:</b> {{ numbers }}</h3>
-          <h3><b>Author:</b> {{ author }}</h3>
         </router-link>
       </div>
     </div>
@@ -106,15 +103,6 @@ export default {
   cursor: pointer;
 }
 
-.button:active {
-  transform: translateY(5px);
-  box-shadow: 0px 0px 0px 0px #a29bfe;
-}
-
-.button:hover {
-  background-color: #c70039;
-  color: white;
-}
 .popup-body {
   color: rgba(0, 0, 0, 0.875);
   flex-grow: 1;
@@ -128,15 +116,5 @@ export default {
   padding: 0.5rem;
   width: auto;
   font-size: larger;
-}
-.ellipsis {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.ellipsisContainer {
-  overflow: overlay;
-  text-overflow: ellipsis;
-  white-space: normal;
 }
 </style>

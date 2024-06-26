@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+
+
+
 const CsvsSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -10,6 +13,12 @@ const CsvsSchema = new mongoose.Schema({
     },
     names: [String],
     numbers: [Number],
+    displayedCharts: {
+        showBarChart: { type: Boolean },
+        showLineChart: { type: Boolean },
+        showPieChart: { type: Boolean },
+        showDoughnutChart: { type: Boolean }
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

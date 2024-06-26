@@ -1,9 +1,11 @@
 <template>
-  <div class="flex h-full w-full justify-center p-4 max-w-md">
-    <div class="max-w-md">
+  <div
+    class="UserProfile flex h-auto w-auto justify-center p-4 max-w-md xl:max-w-sm"
+  >
+    <div class="max-w-md xl:max-w-sm">
       <div class="photo-wrapper p-2">
         <img
-          class="w-60 h-60 rounded-full mx-auto text-center object-cover"
+          class="w-52 h-52 rounded-full mx-auto text-center object-cover"
           :src="User.image"
           alt="User Profile Image"
         />
@@ -26,21 +28,13 @@
             </tr>
           </tbody>
         </table>
-
-        <div class="text-center my-3">
-          <a
-            class="text-m italic hover:underline hover:text-bi_gray_hover font-medium"
-            href="#"
-            @click="changeProfile"
-            >Change Profile Information</a
-          >
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { getDateUtils } from "../../utils";
 export default {
   name: "UserProfile",
@@ -49,21 +43,14 @@ export default {
       required: true,
     },
   },
+
+  computed: {
+    ...mapGetters(["Errors"]),
+  },
   methods: {
-    changeProfile() {
-      alert("You Can't Use This Feature Right Now.");
-    },
     getDate() {
       return getDateUtils(this.User.date, true, false);
     },
   },
 };
 </script>
-
-<style>
-.ellipsis {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-</style>

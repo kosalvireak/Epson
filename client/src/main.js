@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from "./App.vue";
 import router from "./router/index";
 import "./assets/main.css";
+import "./assets/customeStyle.css"
 import Toaster from "@meforma/vue-toaster";
 import store from "./store"
 

@@ -2,6 +2,9 @@
   "mongoURI__": "mongodb+srv://virakvary:Virak789@businessintelligence.9wumq5o.mongodb.net/?retryWrites=true&w=majority",
   "mongoURI": "mongodb://127.0.0.1:27017/BI",
   "jwtSecret": "Secret",
-  "PORT":3000
+  "PORT":3000,
+  "CLOUDINARY_CLOUD_NAME" : "dahrstekd",
+  "CLOUDINARY_KEY" : "293195941186492",
+  "CLOUDINARY_SECRET" : "bVn297Ls4ZGiOg6LGbjuzKzheEM"
 }
 

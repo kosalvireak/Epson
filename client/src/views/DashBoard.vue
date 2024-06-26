@@ -3,8 +3,12 @@
     class="DashBoard flex flex-wrap items-center justify-center overflow-auto mt-4"
   >
     <div v-if="Object.keys(AllCsvs).length == 0 || Errors">
-      <div v-if="Errors" class="text-xl">{{ Errors }}</div>
-      <Preloader :scale="0.8" v-if="Object.keys(AllCsvs).length == 0" />
+      <div v-if="AllCsvsEmpty" class="text-xl">
+        {{
+          Errors || "You don't have any Csv. Please upload or create new table."
+        }}
+      </div>
+      <Preloader :scale="0.8" v-else />
     </div>
     <div v-else v-for="csv in AllCsvs" :key="csv._id">
       <DashBoardContainerWrapper
@@ -36,7 +40,7 @@ export default {
     ...mapActions(["getAllCsvs"]),
   },
   computed: {
-    ...mapGetters(["AllCsvs", "Errors"]),
+    ...mapGetters(["Errors", "AllCsvsEmpty", "AllCsvs"]),
   },
   mounted() {
     if (localStorage.token) {

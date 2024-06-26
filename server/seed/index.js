@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Csv = require('../models/Csvs');
-const config = require("config");
+const config = require("../config/default.json");
 
-mongoose.connect(config.get("mongoURI"))
+mongoose.connect(config.mongoURI)
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -236,8 +236,8 @@ const seedCsvs = [
         ]
     }
 ];
-
-const authorId = ['650881363eabb89c4d4e598a', '6511aba9800466195f906ad4', '6511abc5800466195f906ada'];
+// local DB
+const authorId = ['650881363eabb89c4d4e598a', '6511aba9800466195f906ad4'];
 
 // virakvary @gmail.com
 // 650881363eabb89c4d4e598a
@@ -245,12 +245,25 @@ const authorId = ['650881363eabb89c4d4e598a', '6511aba9800466195f906ad4', '6511a
 // forcodeacademy8 @gmail.com
 // 6511aba9800466195f906ad4
 
-// khoeunkosalvireak98 @gmail.com
-// 6511abc5800466195f906ada
+
+// Cloud DB
+// const authorId = ['651a94ec9a2a414670518472', '653f190f5022289cd2750413'];
+
+// virakvary @gmail.com
+// 651a94ec9a2a414670518472
+
+// pumpkin1P@gmail.com
+// 653f190f5022289cd2750413
 function random() {
     return Math.floor(Math.random() * authorId.length);
 }
 
+const displayedCharts = {
+    showBarChart: true,
+    showLineChart: true,
+    showPieChart: false,
+    showDoughnutChart: false
+};
 const seedDB = async () => {
     await Csv.deleteMany({});
     for (let i = 0; i < seedCsvs.length; i++) {
@@ -261,9 +274,8 @@ const seedDB = async () => {
             names: seedCsvs[i].names,
             numbers: seedCsvs[i].numbers,
             author: authorId[random()],
-
+            displayedCharts: displayedCharts,
         })
-        console.log(csv);
         await csv.save();
     }
 }

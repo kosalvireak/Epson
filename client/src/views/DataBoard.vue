@@ -1,19 +1,27 @@
 <template>
   <section class="flex flex-wrap items-center justify-center overflow-auto">
     <div v-if="Object.keys(AllCsvs).length == 0 || Errors">
-      <div v-if="Errors" class="text-xl">{{ Errors }}</div>
-      <Preloader :scale="0.8" v-if="Object.keys(AllCsvs).length == 0" />
+      <div v-if="AllCsvsEmpty" class="text-xl mt-4">
+        {{
+          Errors || "You don't have any Csv. Please upload or create new table."
+        }}
+      </div>
+      <Preloader :scale="0.8" v-else />
     </div>
     <div
       v-else
       v-for="csv in AllCsvs"
       :key="csv._id"
-      class="VueGoodTableWrapper_loop m-4 bg-bi_lightblue"
+      class="VueGoodTableWrapper_loop m-4 bi-background-blue rounded-2xl"
     >
       <router-link :to="`/admin/dashboard/${csv._id}`">
-        <h1 class="text-white text-xl pl-10 pt-4">{{ csv.title }}</h1>
+        <h1 class="bi-text-white text-xl p-2 border ellipsis rounded-2xl">
+          {{ csv.title }}
+        </h1>
       </router-link>
-      <VueGoodTableWrapper :oneCsv="csv" />
+      <div class="bi-background-white-nohover rounded-2xl m-2">
+        <VueGoodTableWrapper :oneCsv="csv" />
+      </div>
     </div>
   </section>
 </template>
@@ -34,7 +42,7 @@ export default {
     ...mapActions(["getAllCsvs", "GetVueGoodTableData"]),
   },
   computed: {
-    ...mapGetters(["AllCsvs", "VueGoodTableData", "Errors"]),
+    ...mapGetters(["AllCsvs", "VueGoodTableData", "Errors", "AllCsvsEmpty"]),
   },
   mounted() {
     if (localStorage.token) {

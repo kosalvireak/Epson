@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from "../components/auth/Login.vue";
 import AppLayout from "../layouts/AppLayout.vue";
 import Register from "../components/auth/Register.vue";
+import ResetPassword from "../components/auth/ResetPassword.vue"
 import DashBoard from "../views/DashBoard.vue";
 import DataBoard from "../views/DataBoard.vue";
 import DashBoardDetail from "../views/DashBoardDetail.vue"
@@ -27,6 +28,11 @@ const router = createRouter({
       path: "/register",
       name: "register",
       component: Register,
+    },
+    {
+      path: "/reset",
+      name: "reset",
+      component: ResetPassword,
     },
     {
       path: "/admin",

@@ -7,13 +7,13 @@
         <router-view />
       </div>
 
-      <UploadFile
+      <UploadPortal
         v-if="popupTriggers.buttonTrigger"
         :TogglePopup="() => TogglePopup()"
       />
     </div>
     <button
-      class="upload_button bg-gray-200 button"
+      class="upload_button bi-red-transition-button bi-background-gray"
       v-if="showUploadButton"
       @click="TogglePopup()"
     >
@@ -24,15 +24,15 @@
   
 <script>
 import { mapMutations } from "vuex";
-import Header from "../components/common/Header.vue";
+import Header from "../components/common/Navbar.vue";
 import SideBar from "../components/sidebar/SideBar.vue";
 import UploadFile from "../components/common/UploadFile.vue";
-import { ref } from "vue";
 import { sidebarWidth } from "../components/sidebar/state";
+import UploadPortal from "../components/common/UploadPortal.vue";
 
 export default {
   name: "AppLayout",
-  components: { SideBar, UploadFile, Header },
+  components: { SideBar, UploadFile, Header, UploadPortal },
   computed: {
     showUploadButton() {
       if (this.$route.name == "dashboard" || this.$route.name == "data") {

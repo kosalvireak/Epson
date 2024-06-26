@@ -18,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <router-link :to="to" class="link" :class="{ active: isActive }">
+  <router-link :to="to" class="link text-black" :class="{ active: isActive }">
     <i class="material-symbols-outlined text-3xl p-2.5 ml-2"> {{ icon }}</i>
     <transition name="fade">
       <span v-if="!collapsed">
@@ -58,12 +58,12 @@ export default {
 }
 
 .link:hover {
-  background-color: var(--bi_white_hover);
+  background-color: var(--white);
   color: black;
 }
 
 .link.active {
-  background-color: var(--bi_white_active);
+  background-color: var(--white);
   color: black;
 }
 

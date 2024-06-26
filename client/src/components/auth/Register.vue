@@ -39,6 +39,8 @@
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="At least 5 Characters"
                   required=""
+                  size="50"
+                  maxlength="50"
                   v-model="name"
                 />
               </div>
@@ -111,7 +113,7 @@
                 >
               </div>
 
-              <div class="alert alert-danger text-red-500" v-if="Errors">
+              <div class="alert alert-danger text-red-400" v-if="Errors">
                 <i
                   class="fas fa-exclamation-circle"
                   style="font-size: 24px"
@@ -120,16 +122,19 @@
               </div>
               <div class="alert alert-danger text-black" v-else>
                 <p>
-                  Password Must contain at least one number and one uppercase
-                  and lowercase letter, and at least 8 or more characters
+                  Password Must contain at least one number, one uppercase , one
+                  lowercase letter and 8 or more characters.
                 </p>
               </div>
               <button
                 style="background-color: #0e2f55"
                 type="submit"
-                class="w-full text-white bg-bi_lightblue hover:bg-sidebar-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                class="w-full text-white bg-bi_lightblue hover:bg-sidebar-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center bi-flex"
               >
-                Sign in
+                <div class="w-full font-medium" v-if="!IsSendingRequest">
+                  Change Info
+                </div>
+                <div class="loader text-center" v-else></div>
               </button>
               <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?
@@ -173,15 +178,16 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["Errors"]),
+    ...mapGetters(["Errors", "IsSendingRequest"]),
   },
   mounted() {
     this.ClearAlert();
   },
   methods: {
     ...mapActions(["registerUser", "setAlert"]),
-    ...mapMutations(["ClearAlert"]),
+    ...mapMutations(["ClearAlert", "setIsSendingRequest"]),
     SubmitForm(e) {
+      this.setIsSendingRequest(true);
       e.preventDefault();
       if (this.password != this.confirm) {
         this.setAlert("Confirm Password and Password do not match");

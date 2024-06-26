@@ -17,7 +17,7 @@
             <h1
               class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
             >
-              Log in to your account {{ env }}
+              Log in to your account
             </h1>
             <form
               class="space-y-4 md:space-y-6"
@@ -78,9 +78,12 @@
               <button
                 style="background-color: #0e2f55"
                 type="submit"
-                class="w-full text-white bg-bi_lightblue hover:bg-sidebar-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                class="w-full text-white bg-bi_lightblue hover:bg-sidebar-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center bi-flex"
               >
-                Log in
+                <div class="w-full font-medium" v-if="!IsSendingRequest">
+                  Log in
+                </div>
+                <div class="loader text-center" v-else></div>
               </button>
               <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don't have an account yet?
@@ -88,6 +91,14 @@
                   class="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   to="/register"
                   >Register</router-link
+                >
+              </p>
+              <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                Forgot password?
+                <router-link
+                  class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  to="/reset"
+                  >Reset Password.</router-link
                 >
               </p>
             </form>
@@ -120,9 +131,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["LoginUser", "setAlert"]),
-    ...mapMutations(["ClearAlert"]),
+    ...mapActions(["LoginUser", "setAlert", "resetPassword"]),
+    ...mapMutations(["ClearAlert", "setIsSendingRequest"]),
     SubmitForm(e) {
+      this.setIsSendingRequest(true);
       e.preventDefault();
       let user = {
         email: this.email,
@@ -132,7 +144,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["Errors", "User"]),
+    ...mapGetters(["Errors", "User", "IsSendingRequest"]),
   },
   mounted() {
     this.ClearAlert();

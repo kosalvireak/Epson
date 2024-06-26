@@ -36,19 +36,18 @@ export default {
 
 <style>
 :root {
-  --bi_lightblue: #0e2f55;
-  --bi_darkblue: #0b2748;
-  --bi_gray: #b2b6ba;
-  --bi_gray_hover: #6e7073;
-  --bi_white_hover: #f2f4f7;
-  --bi_white_active: #e5e5e5;
+  --blue: #0e2f55;
+  --darkblue: #0b2748;
+  --gray: #b2b6ba;
+  --darkgray: #6e7073;
+  --white: #ffffff;
 }
 </style>
 
 <style scoped>
 .sidebar {
   color: white;
-  background-color: var(--bi_lightblue);
+  background-color: var(--blue);
   float: left;
   position: fixed;
   z-index: 1;

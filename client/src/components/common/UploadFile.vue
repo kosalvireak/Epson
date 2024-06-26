@@ -1,84 +1,77 @@
 <template>
-  <div class="popup" @click="closePopup">
-    <div class="popup-inner" @click.stop>
-      <div class="popup-header">
-        <h1>Upload CSV file</h1>
-        <button class="popup-close button" @click="this.TogglePopup()">
-          <i class="material-symbols-outlined"> close </i>
-        </button>
+  <div class="UploadFile" @click.stop>
+    <form @submit.prevent class="popup-body">
+      <div class="formInstruction overflow-auto">
+        <h3 class="text-xl">Instruction</h3>
+        <ol>
+          <li>- Title must set first and can't be over 50 characters.</li>
+          <li>- Choose an Csv file that have only 2 Columns</li>
+          <li>
+            - First column name must be "names" and tha data of must be a Text.
+          </li>
+          <li>
+            - Second column name must be "number" and tha data of must be a
+            Number.
+          </li>
+          <li>- Preview will show after upload</li>
+          <li>
+            - If the data is not valid or empty the "{}" will show in the white
+            box.
+          </li>
+        </ol>
       </div>
-      <form @submit.prevent class="popup-body">
-        <div class="formInstruction">
-          <h3 class="text-xl">Instruction</h3>
-          <ol>
-            <li>- Title must set first and can't be over 50 characters.</li>
-            <li>- Choose an Csv file that have only 2 Columns</li>
-            <li>
-              - First column name must be "names" and tha data of must be a
-              Text.
-            </li>
-            <li>
-              - Second column name must be "number" and tha data of must be a
-              Number.
-            </li>
-            <li>- Preview will show after upload</li>
-            <li>
-              - If the data is not valid or empty the "{}" will show in the
-              white box.
-            </li>
-          </ol>
-        </div>
-        <div class="divTitle">
-          <input
-            type="text"
-            placeholder="Title of your csv"
-            v-model="csvTitleValue"
-            pattern="[A-Za-z0-9_ ]+"
-            required
-            class="input_field"
-            size="50"
-            maxlength="50"
-          />
-          <span class="error_message" v-show="!isValidTitle">
-            Please enter a valid title (alphanumeric characters and underscores
-            only).
-          </span>
-        </div>
+      <div class="divTitle">
+        <input
+          type="text"
+          id="title"
+          placeholder="Title of your csv"
+          v-model="csvTitleValue"
+          pattern="[A-Za-z0-9_ ]+"
+          required
+          class="input_field"
+          size="50"
+          maxlength="50"
+        />
+        <span class="error_message ellipsis" v-show="!isValidTitle">
+          Please enter a valid title (alphanumeric characters and underscores
+          only).
+        </span>
+      </div>
 
-        <div class="divTitle">
-          <input
-            type="file"
-            @change="handleFileChange"
-            required
-            class="input_field file"
-            accept=".csv"
-            :disabled="isUploadDisabled"
-          />
-          <span class="error_message" v-show="!isValidTitle">
-            Please select only csv file
-          </span>
-        </div>
-        <div class="upload_preview">
-          {{ NewCsv }}
-        </div>
-        <button
-          class="popup-upload-button"
-          type="submit"
-          @click="submitData()"
-          :disabled="!isButtonDisabled"
-          :class="{ 'btn-disable': !isButtonDisabled }"
-        >
-          Upload
-        </button>
-      </form>
-    </div>
+      <div class="divTitle">
+        <input
+          type="file"
+          id="file"
+          @change="handleFileChange"
+          required
+          class="input_field file text-black"
+          accept=".csv"
+          :disabled="isUploadDisabled"
+        />
+        <span class="error_message ellipsis" v-show="!isValidTitle">
+          Please select only csv file
+        </span>
+      </div>
+      <div class="upload_preview">
+        {{ NewCsv }}
+      </div>
+      <button
+        class="popup-upload-button"
+        type="submit"
+        @click="submitData()"
+        :disabled="!isButtonDisabled"
+        :class="{ 'btn-disable': !isButtonDisabled }"
+      >
+        Upload
+      </button>
+    </form>
   </div>
 </template>
 
 <script scoped>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
-  props: ["TogglePopup"],
+  name: "UploadFile",
   data() {
     return { isValidTitle: false, csvTitleValue: "" };
   },
@@ -86,7 +79,6 @@ export default {
     ...mapGetters(["CsvTitle", "NewCsv"]),
     isButtonDisabled() {
       let length = Object.keys(this.NewCsv).length;
-      // console.log("isValidTitle ", this.isValidTitle, length);
       return this.isValidTitle && length > 1;
     },
     isUploadDisabled() {
@@ -95,7 +87,6 @@ export default {
   },
   watch: {
     csvTitleValue(oldValue, newValue) {
-      // console.log("isValidTitle", this.isValidTitle);
       const regex = /^[A-Za-z0-9_ ]+$/;
       this.isValidTitle = regex.test(newValue);
       if (oldValue !== newValue) {
@@ -106,14 +97,9 @@ export default {
   methods: {
     ...mapActions(["handleFileChange", "handleSubmit"]),
     ...mapMutations(["addCsvTitle", "clearNewCsvState"]),
-    closePopup(event) {
-      if (!event.target.closest(".popup-inner")) {
-        this.TogglePopup();
-      }
-    },
     async submitData() {
       await this.handleSubmit();
-      this.TogglePopup();
+      this.$emit("submitData");
     },
   },
 };
@@ -135,42 +121,15 @@ export default {
   margin: auto;
   color: #0b2748;
 }
-.popup-inner {
+.UploadFile {
   background: #e3e3e3;
   width: 50rem;
-  height: 40rem;
+  width: auto;
+  height: 38rem;
   border-radius: 15px;
+  border-top-left-radius: 0;
   display: flex;
   flex-direction: column;
-}
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 3rem;
-  margin: 0.5rem;
-  border-bottom: 1px solid rgb(0, 0, 0);
-}
-.popup-header h1 {
-  font-size: larger;
-}
-.popup-close {
-  background-color: whitesmoke;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: none;
-  margin-bottom: 7px;
-  margin-right: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-close:hover {
-  background-color: #c70039;
-  color: white;
 }
 
 .popup-body {
@@ -225,7 +184,6 @@ export default {
 }
 .file {
   padding: 9px 0 0 12px;
-  color: white;
 }
 .error_message {
   color: red;

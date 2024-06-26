@@ -1,26 +1,37 @@
 <template>
-  <div class="EditableTable_Container p-5 m-5">
+  <div class="EditableTable_Container">
     <p class="text-red-500">{{ Errors }}</p>
-    <table class="w-full">
+
+    <table class="w-full bi-text-darkgray">
       <thead>
         <tr class="h-10">
           <th>Name</th>
           <th>Number</th>
-          <th class="action">Action</th>
+          <th class="w-24">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in items" :key="index">
           <td>
-            <input v-model="item.name" type="text" :id="'name' + index" />
+            <input
+              v-model="item.name"
+              type="text"
+              :id="'name' + index"
+              placeholder=". . ."
+            />
           </td>
           <td>
-            <input v-model="item.number" type="text" :id="'number' + index" />
+            <input
+              v-model="item.number"
+              type="text"
+              :id="'number' + index"
+              placeholder="0"
+            />
           </td>
-          <td class="deleteButton">
+          <td class="bg-white">
             <button
               @click="deleteARow(index)"
-              class="rounded bg-red-500 text-white w-20 h-10 p-2"
+              class="rounded bi-text-blue w-20 h-10 p-2 ml-2 bi-background-gray-nohover bi-red-transition-button"
             >
               Delete
             </button>
@@ -33,13 +44,13 @@
     >
       <button
         @click="addRow"
-        class="rounded bg-blue-500 text-white w-20 h-10 m-4"
+        class="rounded bi-text-blue bi-background-gray w-20 h-10 m-4"
       >
         Add Row
       </button>
       <button
         @click="onClickDone"
-        class="rounded bg-green-500 text-white w-20 h-10 m-4"
+        class="rounded bi-text-blue bi-background-gray w-20 h-10 m-4"
       >
         Done
       </button>
@@ -52,18 +63,10 @@ import { mapActions, mapGetters } from "vuex";
 export default defineComponent({
   name: "EditableTable",
   props: {
-    columns: {
-      type: Array,
-    },
-    columnNumbers: {
-      type: Array,
-    },
-    data: {
-      type: Array,
-    },
     oneCsv: {
       type: Object,
     },
+    fromUpload: Boolean,
   },
   data() {
     return {
@@ -83,19 +86,28 @@ export default defineComponent({
     ...mapGetters(["Errors"]),
   },
   methods: {
-    ...mapActions(["deleteRow", "saveTableData"]),
+    ...mapActions(["deleteRow", "saveTableData", "createCsvTable", "setAlert"]),
 
-    deleteARow(index) {
+    async deleteARow(index) {
       this.items.splice(index, 1);
-      this.deleteRow(index);
+      if (!this.fromUpload) {
+        await this.deleteRow(index);
+      }
     },
-    onClickDone() {
-      this.saveTableData(this.items);
+    async onClickDone() {
+      if (this.fromUpload) {
+        const res = await this.createCsvTable(this.items);
+        if (res == true) {
+          this.$emit("submitData");
+        }
+      } else {
+        await this.saveTableData(this.items);
+      }
     },
     addRow() {
       this.items.push({
         name: "",
-        number: 0,
+        number: "",
       });
     },
   },
@@ -104,8 +116,7 @@ export default defineComponent({
 
 <style scoped>
 table {
-  background-color: #f2f3f7;
-  color: #606266;
+  background-color: #f2f4f7;
   border-collapse: collapse;
 }
 table,
@@ -121,9 +132,6 @@ th {
   padding-left: 12px;
 }
 
-.action {
-  width: 6rem;
-}
 .deleteButton {
   padding-left: 0.5rem;
 }
@@ -137,18 +145,6 @@ input[type="text"] {
   height: 3rem;
   background-color: rgb(255, 255, 255);
   text-align: left;
-}
-.btn-delete {
-  background-color: #2195f380;
-  color: rgb(28, 32, 32);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-.btn-delete:hover {
-  background-color: #2195f3d3;
 }
 .actionButton {
   background: #f3f4f7;

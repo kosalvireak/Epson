@@ -1,15 +1,17 @@
 <template>
-  <div class="grid h-screen px-4 place-content-center bg-bi_darkblue">
+  <div class="grid h-screen px-4 place-content-center bi-background-darkblue">
     <div class="text-center">
-      <h1 class="text-9xl text-bi_white_active">404</h1>
+      <h1 class="text-9xl bi-text-white">404</h1>
 
-      <p class="text-2xl font-bold tracking-tight sm:text-4xl">Uh-oh!</p>
+      <p class="text-2xl font-bold tracking-tight sm:text-4xl bi-text-white">
+        Uh-oh!
+      </p>
 
-      <p class="mt-4 text-gray-500">We can't find that page.</p>
+      <p class="mt-4 bi-text-gray">We can't find that page.</p>
 
       <button
         @click="goBackRoute()"
-        class="inline-block px-5 py-3 mt-6 text-md text-bi_lightblue bg-bi_gray hover:bg-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg"
+        class="inline-block px-5 py-3 mt-6 bi-background-gray font-medium rounded-lg bi-text-darkblue"
       >
         Go Back Home
       </button>

@@ -38,6 +38,9 @@ export default {
       type: Object,
       required: true,
     },
+    backgroundColors: {
+      type: Array,
+    },
   },
   data() {
     return { chartjsdata: {} };
@@ -58,7 +61,7 @@ export default {
           {
             label: this.oneCsv.title,
             data: this.oneCsv.numbers,
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            backgroundColor: this.backgroundColors,
             borderColor: "rgba(54, 162, 235, 1)",
             borderWidth: 1,
             hoverBackgroundColor: "rgba(54, 162, 235, 0.4)",
