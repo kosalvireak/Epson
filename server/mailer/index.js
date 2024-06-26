@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
 const oAuth2Client = new google.auth.OAuth2(
-    CLIENT_ID,s
+    CLIENT_ID,
     CLEINT_SECRET,
     REDIRECT_URI
 );
