@@ -9,7 +9,7 @@
           href="#"
           class="flex items-center mb-6 text-4xl font-semibold text-bi_white_active dark:text-white"
         >
-          Business Intelligence
+        Plot Graph
         </a>
         <div
           class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700"
